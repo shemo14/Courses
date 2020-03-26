@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { View, Text, Image, TouchableOpacity, ImageBackground, Linking, FlatList, Platform, ScrollView, Dimensions, I18nManager, KeyboardAvoidingView } from "react-native";
-import { Container, Content, Header, Button, Left, Icon, Body, Title, Right, Item, Input, Picker, CheckBox, Form, Label, Card} from 'native-base'
+import { View, Text, Image, TouchableOpacity, FlatList, } from "react-native";
+import { Container, Content, Header, Button, Left, Body, Right, Card} from 'native-base'
 import axios from 'axios';
 import styles from '../../assets/styles';
 import {NavigationEvents} from "react-navigation";
@@ -26,14 +26,17 @@ class Home extends Component {
 		axios({
 			url         : CONST.url + 'categories',
 			method      : 'GET',
-			headers     : { Authorization: this.props.user.token },
 		}).then(response => {
 			this.setState({ spinner  : false, categories: response.data.data })
 		});
     }
 
+    componentWillReceiveProps(nextProps) {
+    	console.log('user login', nextProps);
 
-    static navigationOptions = () => ({
+	}
+
+	static navigationOptions = () => ({
         header      : null,
         drawerLabel : ({ focused }) => ( <Text style={[styles.textRegular, styles.textSize_18, { color: focused ? '#f6b549' : '#27336d' }]}>الرئيسية</Text> ) ,
         drawerIcon  : ({ focused }) => ( <Image style={[styles.smImage]} source={focused ? require('../../assets/images/yellow_home.png') : require('../../assets/images/blue_home.png')} resizeMode={'cover'}/>)
@@ -47,7 +50,7 @@ class Home extends Component {
 			<TouchableOpacity
 				onPress     = {() => this.props.navigation.navigate('category', { name : item.item.name, id: item.item.id  })}
 				key         = { item.index }
-				style       = {[styles.position_R, item.index%2 === 0 ? styles.height_150 : styles.height_250, { alignSelf: 'flex-start', top: item.index >= 2 && item.index%2 === 0 ? (item.index/2) * -105 : 0 , marginBottom: 35, width: '46.7%', marginHorizontal: 6 }]}>
+				style       = {[styles.position_R, item.index%2 === 0 ? styles.height_150 : styles.height_250, { alignSelf: 'flex-start', top: item.index >= 2 && item.index%2 === 0 ? (item.index/2) * -105 : 0 , marginBottom: 35, width: '46.7%', marginHorizontal: 6, zIndex: item.index * 5 }]}>
 				<Card style={[ item.index%2 === 0 ? styles.height_150 : styles.height_250, { borderRadius: 10, padding: 0 }]}>
 					<Image source={{ uri: item.item.image  }} resizeMode={'cover'} style={{ width: '100%', height: '100%', borderRadius: 10,}}/>
 				</Card>
@@ -62,7 +65,7 @@ class Home extends Component {
 
     render() {
 		let { categories } 	= this.state;
-		const firstCategory = categories.length > 0 ? { id: categories[0].id, name: categories[0].name, image: categories[0].image } : { name: '', image: '' };
+		const firstCategory = categories.length > 0 ? { id: categories[0].id, name: categories[0].name, image: categories[0].image } : null;
 		if (categories.length > 0 )
 			categories.splice(0 , 1);
 		else categories = [];
@@ -89,12 +92,15 @@ class Home extends Component {
 
 				<Content contentContainerStyle={styles.bgFullWidth}>
                     <View style={{ padding: 15 }}>
-						<TouchableOpacity onPress={() => this.props.navigation.navigate('category', { name: firstCategory.name, id: firstCategory.id })}>
-							<Card style={{ borderRadius: 10, height: 150, padding: 0 }}>
-								<Image source={{ uri: firstCategory.image }} resizeMode={'cover'} style={{ width: '100%', height: 150, borderRadius: 10,}}/>
-							</Card>
-                            <Text style={[styles.textRegular, { fontSize: 16, marginTop: 5, alignSelf: 'center', color: '#3c3c3c' }]}>{ firstCategory.name }</Text>
-						</TouchableOpacity>
+						{
+							firstCategory != null ?
+								<TouchableOpacity onPress={() => this.props.navigation.navigate('category', { name: firstCategory.name, id: firstCategory.id })}>
+									<Card style={{ borderRadius: 10, height: 150, padding: 0 }}>
+										<Image source={{ uri: firstCategory.image }} resizeMode={'cover'} style={{ width: '100%', height: 150, borderRadius: 10,}}/>
+									</Card>
+									<Text style={[styles.textRegular, { fontSize: 16, marginTop: 5, alignSelf: 'center', color: '#3c3c3c' }]}>{ firstCategory.name }</Text>
+								</TouchableOpacity> : null
+						}
 
 						<FlatList
 							data                    = {categories}
@@ -112,11 +118,11 @@ class Home extends Component {
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('statistics')}>
                         <Image source={require('../../assets/images/up.png')} resizeMode={'contain'} style={{ width: 30, height: 30 }}/>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('notification')}>
                         <Image source={require('../../assets/images/bell.png')} resizeMode={'contain'} style={{ width: 30, height: 30 }}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('profile')} style={{ borderRadius: 50, borderWidth: 2, borderColor: '#27336d', overflow: 'hidden' }}>
-                        <Image source={{ uri: 'https://i.pinimg.com/564x/7f/57/7a/7f577a9bb7ee2556179e5f4e3ea1ff3a.jpg' }} resizeMode={'contain'} style={{ width: 35, height: 35, borderRadius: 50}}/>
+                        <Image source={{ uri: this.props.user ? this.props.user.avatar : '' }} resizeMode={'contain'} style={{ width: 35, height: 35, borderRadius: 50}}/>
                     </TouchableOpacity>
                 </Card>
 

@@ -24,10 +24,14 @@ class DrawerCustomization extends Component {
 	}
 
     render() {
-		const user = {
-			avatar      : 'https://i.pinimg.com/564x/7f/57/7a/7f577a9bb7ee2556179e5f4e3ea1ff3a.jpg',
-			name        : 'اوامر الشبكة',
-		};
+    	let user = this.props.user;
+    	if (user == null){
+			user = {
+				avatar      : 'https://i.pinimg.com/564x/7f/57/7a/7f577a9bb7ee2556179e5f4e3ea1ff3a.jpg',
+				name        : 'اوامر الشبكة',
+			};
+		}
+
 
         return (
 			<Container>
@@ -36,7 +40,7 @@ class DrawerCustomization extends Component {
 					<View style={{ backgroundColor: '#27336d', height: 200, alignItems: 'center', justifyContent: 'center' }}>
 
 						<View style={[styles.viewUser, styles.justifyCenter]}>
-							<TouchableOpacity style={[styles.position_R, styles.flexCenter, styles.zIndexUp, styles.Width_100, styles.marginHorizontal_25 ]}>
+							<TouchableOpacity onPress={() => this.props.navigation.navigate('profile')} style={[styles.position_R, styles.flexCenter, styles.zIndexUp, styles.Width_100, styles.marginHorizontal_25 ]}>
                                 <ProgressCircle
                                     percent={30}
                                     radius={50}

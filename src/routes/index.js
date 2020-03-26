@@ -22,6 +22,8 @@ import Logout from "../components/Logout";
 import Profile from "../components/Profile";
 import EditProfile from "../components/EditProfile";
 import Statistics from "../components/Statistics";
+import Notification from "../components/Notification";
+import Quiz from "../components/Quiz";
 
 
 const drawerCust = (props) => (<DrawerCustomization {...props} />);
@@ -52,6 +54,7 @@ const DrawerNavigator = createDrawerNavigator({
 
 
 const appStack =  createStackNavigator({
+
 	drawerNavigator: {
 		screen: DrawerNavigator,
 		navigationOptions: {
@@ -130,6 +133,18 @@ const appStack =  createStackNavigator({
 			header: null
 		}
 	},
+	notification: {
+		screen: Notification,
+		navigationOptions: {
+			header: null
+		}
+	},
+	quiz: {
+		screen: Quiz,
+		navigationOptions: {
+			header: null
+		}
+	},
 
 });
 
@@ -150,8 +165,7 @@ const authStack = createStackNavigator({
 });
 
 const AppNavigator = createSwitchNavigator({
-
-    InitScreen: {
+	InitScreen: {
         screen: InitScreen,
         navigationOptions: {
             header: null

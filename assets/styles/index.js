@@ -767,10 +767,12 @@ const styles = ({
     label : {
         top:-5,
         left: 15,
-        backgroundColor: '#fff',
+        // backgroundColor: '#ffffff',
         alignSelf: 'flex-start',
         fontFamily: 'sukar',
-        fontSize: 15
+        fontSize: 15,
+        borderBottomWidth: 2,
+        borderBottomColor: '#fff'
     },
     input : {
         borderColor         : COLORS.gray,
