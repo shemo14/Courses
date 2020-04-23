@@ -7,16 +7,16 @@ import {NavigationEvents} from "react-navigation";
 import {connect} from "react-redux";
 import Spinner from "react-native-loading-spinner-overlay";
 import CONST from "../consts";
-
-
+import { Notifications } from "expo";
 
 class Home extends Component {
     constructor(props){
         super(props);
 
         this.state={
-            spinner  	: true,
-            categories  : [],
+            spinner  			: true,
+            categories  		: [],
+			notificationCounter	: 0
         }
     }
 
@@ -26,15 +26,22 @@ class Home extends Component {
 		axios({
 			url         : CONST.url + 'categories',
 			method      : 'GET',
+			headers     : { Authorization: this.props.auth.data.token },
 		}).then(response => {
-			this.setState({ spinner  : false, categories: response.data.data })
+			this.setState({ spinner  : false, categories: response.data.data, notificationCounter: response.data.extra.notifications_count })
 		});
     }
 
-    componentWillReceiveProps(nextProps) {
-    	console.log('user login', nextProps);
 
+	componentDidMount() {
+		Notifications.addListener(this.handleNotification);
 	}
+
+	handleNotification = (notification) => {
+		if (notification && notification.origin !== 'received') {
+			this.props.navigation.navigate('notification');
+		}
+	};
 
 	static navigationOptions = () => ({
         header      : null,
@@ -120,6 +127,9 @@ class Home extends Component {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('notification')}>
                         <Image source={require('../../assets/images/bell.png')} resizeMode={'contain'} style={{ width: 30, height: 30 }}/>
+						<View style={{ position: 'absolute', borderRadius: 30, backgroundColor: '#f00', width:20, height: 20}}>
+							<Text style={{ color: '#fff', textAlign: 'center' }}>{ this.state.notificationCounter }</Text>
+						</View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('profile')} style={{ borderRadius: 50, borderWidth: 2, borderColor: '#27336d', overflow: 'hidden' }}>
                         <Image source={{ uri: this.props.user ? this.props.user.avatar : '' }} resizeMode={'contain'} style={{ width: 35, height: 35, borderRadius: 50}}/>

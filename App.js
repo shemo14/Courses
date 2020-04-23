@@ -8,9 +8,9 @@ import { Root } from "native-base";
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistedStore } from './src/store';
+import * as Permissions from "expo-permissions";
+import { Notifications } from 'expo'
 import './ReactotronConfig';
-// import * as Permissions from "expo-permissions";
-// import { Notifications } from 'expo'
 
 
 
@@ -34,14 +34,12 @@ export default class App extends React.Component {
 
     console.disableYellowBox = true;
 
-    // if (Platform.OS === 'android') {
-    //   Notifications.createChannelAndroidAsync('orders', {
-    //     name: 'Chat messages',
-    //     sound: true,
-    //   });
-    // }
-
-    // Notifications.addListener(this.handleNotification);
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('notify', {
+        name: 'Chat messages',
+        sound: true,
+      });
+    }
 
 
     await Font.loadAsync({
@@ -76,3 +74,9 @@ export default class App extends React.Component {
     );
   }
 }
+
+
+
+// Keystore password: 9ccd8571588b40bf981c2fa8d361f92a
+// Key alias:         QG1fc2hhbXMvY291cnNlcw==
+// Key password:      92e17d25f62e4b5a927381e594f6b071

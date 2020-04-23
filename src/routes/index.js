@@ -24,6 +24,7 @@ import EditProfile from "../components/EditProfile";
 import Statistics from "../components/Statistics";
 import Notification from "../components/Notification";
 import Quiz from "../components/Quiz";
+import Replay from "../components/Replay";
 
 
 const drawerCust = (props) => (<DrawerCustomization {...props} />);
@@ -31,6 +32,7 @@ const drawerCust = (props) => (<DrawerCustomization {...props} />);
 const DrawerNavigator = createDrawerNavigator({
     home                : Home,
 	complaint           : Complaint,
+	replay           	: Replay,
 	aboutApp            : AboutApp,
 	contactUs           : ContactUs,
 	logout              : Logout,
@@ -141,6 +143,12 @@ const appStack =  createStackNavigator({
 	},
 	quiz: {
 		screen: Quiz,
+		navigationOptions: {
+			header: null
+		}
+	},
+	replay: {
+		screen: Replay,
 		navigationOptions: {
 			header: null
 		}
